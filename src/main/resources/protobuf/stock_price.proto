@@ -1,0 +1,8 @@
+syntax="proto3";
+package com.meghasys.kstream.kafka_streams.protobuf;
+//Example : {'NSE:RELIANCE': {'instrument_token': 738561, 'last_price': 2565.05}}
+message StockPrice{
+  string name = 1;
+  string instrument_token = 2;
+  double last_price = 3;
+}
