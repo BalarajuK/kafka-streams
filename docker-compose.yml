@@ -1,0 +1,75 @@
+
+#  zookeeper:
+#    image: bitnami/zookeeper:latest
+#    container_name: zookeeper_test
+#    ports:
+#      - "2181:2181"
+#    environment:
+#      ALLOW_ANONYMOUS_LOGIN: "yes"
+
+services:
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka_test
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka-store:/kafka
+    environment:
+      KAFKA_ENABLE_KRAFT: "yes"                   # 🔥 Enable KRaft (no Zookeeper)
+      KAFKA_CFG_PROCESS_ROLES: "controller,broker"
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+      KAFKA_CFG_LISTENERS: "PLAINTEXT://:9092,CONTROLLER://:9093"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092"
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+
+
+  #  mongodb:
+  #    image: mongo
+  #    ports:
+  #      - "27017:27017"
+  #    volumes:
+  #      - mongodb:/mongodb
+  #    environment:
+  #      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ADMIN_USER}
+  #      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ADMIN_PASS}
+
+  mysqldb:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS}
+      MYSQL_DATABASE: ${MYSQL_DB}
+    volumes:
+      - mysqldb:/mysqldb
+#
+#  mongo-express:
+#    image: mongo-express
+#    ports:
+#      - "8091:8091"
+#    environment:
+#      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ADMIN_USER}
+#      ME_CONFIG_MONGODB_ADMINUSERPASSWORD: ${MONGO_ADMIN_PASS}
+#      ME_CONFIG_MONGODB_SERVER: mongodb
+#    depends_on:
+#      - mongodb
+#    restart: unless-stopped
+
+
+
+
+volumes:
+  kafka-store:
+    external: true
+  mongodb:
+    external: true
+  mysqldb:
+    external: true
+
+
+
+
